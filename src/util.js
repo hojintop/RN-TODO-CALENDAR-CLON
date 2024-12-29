@@ -1,4 +1,8 @@
+{/* tip : ios 시뮬 키보드 cmd + shift + k */}
+
 import dayjs from "dayjs";
+
+export const ITEM_WIDTH = 230;
 
 export const fillEmptyColumns = (columns, start, end) => {
   const filledColumns = columns.slice(0);
