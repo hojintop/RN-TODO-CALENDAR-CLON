@@ -11,11 +11,12 @@ export default ({
   onPressRightArrow,
   showDatePicker,
   setSelectedDate,
+  todoList,
 }) => {
   const columnSize = 35;
   const now = dayjs();
 
-  function Column({ text, color, opacity, disabled, onPress, isSelected }) {
+  function Column({ text, color, opacity, disabled, onPress, isSelected, hasTodo }) {
     return (
       <TouchableOpacity
         disabled={disabled}
@@ -29,7 +30,7 @@ export default ({
         }}
         onPress={onPress}
       >
-        <Text style={{ color, opacity }}>{text}</Text>
+        <Text style={{ color, opacity, fontWeight: hasTodo ? 'bold' : 'normal' }}>{text}</Text>
       </TouchableOpacity>
     );
   }
@@ -38,10 +39,11 @@ export default ({
     const dateText = dayjs(date).get("date");
     const day = dayjs(date).get("day");
     // 현재 월 여부 확인
-    const isCurrentMonth = dayjs(date).isSame(now, "month");
+    const isCurrentMonth = dayjs(date).isSame(selectedDate, "month");
     const color = getColorByDay(day);
     const onPress = () => setSelectedDate(date);
     const isSelected = dayjs(date).isSame(selectedDate, "date");
+    const hasTodo = todoList.find(todo => dayjs(todo.date).isSame(dayjs(date), 'date'));
     return (
       <Column
         text={dateText}
@@ -49,6 +51,7 @@ export default ({
         opacity={isCurrentMonth ? 1 : 0.4}
         onPress={onPress}
         isSelected={isSelected}
+        hasTodo={hasTodo}
       />
     );
   }

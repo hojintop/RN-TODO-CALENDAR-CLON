@@ -1,5 +1,4 @@
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   Alert,
   FlatList,
@@ -28,6 +27,7 @@ import Calendar from "./src/Calendar";
 import AddTodoInput from "./src/AddTodoInput";
 
 export default function App() {
+  const flatListRef = useRef(null);
   const now = dayjs();
 
   const {
@@ -41,7 +41,7 @@ export default function App() {
     addMonth,
   } = useCalendar(now);
 
-  const { todoList, inputTodo, setInputTodo, toggleTodo, removeTodo, addTodo } = useToDoList(selectedDate);
+  const { todoList, filteredTodoList, inputTodo, setInputTodo, toggleTodo, removeTodo, addTodo, resetInput } = useToDoList(selectedDate);
 
   const columns = getCalendarColumns(selectedDate);
 
@@ -69,6 +69,7 @@ export default function App() {
           onPressRightArrow={onPressRightArrow}
           showDatePicker={showDatePicker}
           setSelectedDate={setSelectedDate}
+          todoList = {todoList}
         />
         <Margin height={15} />
         <View
@@ -127,8 +128,15 @@ export default function App() {
 
   function onPressAdd(){
     addTodo();
+    resetInput();
+    scrollToEnd();
   }
 
+  function scrollToEnd(){
+    setTimeout(() => {
+      flatListRef.current?.scrollToEnd();  
+    }, 300);
+  }
   return (
     <SafeAreaProvider>
       <Pressable style={styles.container} onPress={Keyboard.dismiss}>
@@ -146,9 +154,11 @@ export default function App() {
           />
 
           <FlatList
-            data={todoList}
+            ref={flatListRef}
+            data={filteredTodoList}
             renderItem={renderTodoItem}
             ListHeaderComponent={ListHeaderComponent}
+            showsVerticalScrollIndicator={false}
           />
 
           
@@ -157,6 +167,7 @@ export default function App() {
             onChangeText={setInputTodo}
             selectedDate={selectedDate}
             onPressAdd={onPressAdd}
+            onFocus={scrollToEnd}
           />
 
           <DateTimePickerModal

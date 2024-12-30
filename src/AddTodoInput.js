@@ -4,7 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { ITEM_WIDTH } from "./util";
 import dayjs from "dayjs";
 
-export default ({ value, onChangeText, selectedDate, onPressAdd }) => {
+export default ({ value, onChangeText, selectedDate, onPressAdd, onFocus }) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -29,6 +29,8 @@ export default ({ value, onChangeText, selectedDate, onPressAdd }) => {
             color: '#595959'
             }}
             onSubmitEditing={onPressAdd}
+            blurOnSubmit={false}
+            onFocus={onFocus}
         />
         <TouchableOpacity onPress={onPressAdd} style={{ padding: 5 }}>
             <Ionicons name="add" size={30} color="#595959" />
